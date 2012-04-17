@@ -1,0 +1,7 @@
+http://www.aaireland.ie/	 |	 404
+http://www.streetmap.co.uk/newmap.srf?x=373750&y=805673&z=3&sv=echt&st=3&tl=Echt,+Aberdeenshire+[Town]&searchp=newsearch.srf&mapp=newmap.srf	 |	 -1
+http://www.companieshouse.gov.uk/webcheck/marshal?link=download	 |	 302
+http://www.heritageireland.ie/	 |	 403
+http://users.erols.com/wrei/faqs/medieval.html	 |	 404
+http://www.chebucto.ns.ca/Heritage/FSCNS/Scots_NS/Come_Away_In.html	 |	 404
+http://www.house-of-tartan.scotland.net/house/default.htp	 |	 404
