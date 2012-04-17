@@ -5,7 +5,9 @@ import java.io.IOException;
 import java.io.InputStreamReader;
 import java.net.HttpURLConnection;
 import java.net.MalformedURLException;
+import java.net.SocketTimeoutException;
 import java.net.URL;
+import java.net.UnknownHostException;
 import java.util.ArrayList;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
@@ -146,12 +148,17 @@ public class LinkChecker {
 				{
 				//	System.out.println(code);
 					// add link and the code to the arraylist
-					outArray.add("<a href=\""+link+ "\"</a> \t |\t "+code +"\n </br>");
+					outArray.add("<a href=\""+link+ "\"</a>"+link+"  \t |\t "+code +"\n </br>");
 				}
 			 } 
-			 catch (java.net.SocketTimeoutException e)
+			 catch (UnknownHostException e)
 			 {
-				 outArray.add("<a href=\""+linkArray.get(i)+"\"</a> \t | \t Timed Out \n </br>");
+				 outArray.add("<a href=\""+linkArray.get(i)+"\"</a>"+ linkArray.get(i)+" \t | \t Unknown Host Exception \n </br>");
+				 
+			 }
+			 catch (SocketTimeoutException e)
+			 {
+				 outArray.add("<a href=\""+linkArray.get(i)+"\"</a> "+ linkArray.get(i)+"\t | \t Timed Out \n </br>");
 				 
 			 }
 			 catch (MalformedURLException e) 
@@ -176,7 +183,6 @@ public class LinkChecker {
     		for (int i=0; i<outArray.size(); i++)
     		{
     			out.write(outArray.get(i));
-    			out.write("<\br>");
     			out.newLine();
     		}
     		out.close();
