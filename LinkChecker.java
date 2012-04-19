@@ -181,7 +181,7 @@ public class LinkChecker {
 					boolean containsHash=containsHashReference(linkArray.get(i));
 					if (!containsHash)
 					{
-						outArray.add("<a href=\""+link+ "\"</a>"+link+"  \t |\t Internal #Ref Not Found \n </br>");
+						outArray.add("<a href=\""+link+ "\"</a>"+link+"  \t |\t Internal #Ref Not Found, but this link will work \n </br>");
 					}
 					System.out.println(linkArray.get(i));
 					
@@ -222,7 +222,7 @@ public class LinkChecker {
 		 String hashPageStr;
 		 while((hashPageStr=page.readLine())!=null) 
 		 {
-			 if (hashPageStr.contains("name="+hashName) | hashPageStr.contains("id="+hashName))
+			 if (hashPageStr.contains("name=\""+hashName) | hashPageStr.contains("id=\""+hashName))
 			 {
 				return true; 
 			 }
