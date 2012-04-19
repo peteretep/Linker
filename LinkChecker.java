@@ -41,13 +41,37 @@ public class LinkChecker {
 			while((str=page.readLine())!=null) 
 			{
 			
-				//replaces any refrence to A HREF with lowercase
-				// Attempt to use regular expressions
-				//str=str.replaceAll("A(\\s+)HREF(\\s+)=(\\s+)","a href=");
+				/* Compile a Pattern */
+				// Regex sourced http://stackoverflow.com/questions/163360/regular-expresion-to-match-urls-java
+				// this regex only finds external links
+				 String externalRegex = "(http|https|ftp|file)://[-a-zA-Z0-9+&@#/%?=~_|!:,.;]*[-a-zA-Z0-9+&@#/%=~_|]";
+				 Pattern linkPattern=Pattern.compile(externalRegex);
+				 
+				 //Matcher object
+				 Matcher m=linkPattern.matcher(str);
+				 if(m.find())
+				 {
+					 System.out.println(m.group(0));
+					if(!m.group(0).contains("google"))
+					{
+						linkArray.add(m.group());
+					}
+				 }
+				 
+				 
+				 // Regex found using www.regexplanet.com
+			/*	 
+				 String aHrefRegex="a\\s+href\\s*=\\s*\\\".*\\\"\\s*>.*<\\s*\\\\\\s*a\\s*>";  //a href = "afsgd"></a>
+				 Pattern aHrefPattern=Pattern.compile(aHrefRegex,Pattern.CASE_INSENSITIVE);
+				 
+				 if(m.find())
+				 {
+					 System.out.println(m.group(0));
+				 }
 				
-				//str=str.replaceAll("a(\\s+)href(\\s+)=(\\s+)", "a href=");
-			//	System.out.println(str);
-				// finds all lines that contain reference to a link
+				
+				
+				/*
 				
 				str=str.replaceAll("A HREF=","a href=");
 				
@@ -99,7 +123,7 @@ public class LinkChecker {
 						}
 					}
 					
-				}
+				} */
 				
 			}
 			page.close();
@@ -137,8 +161,9 @@ public class LinkChecker {
 				URL link= new URL(linkArray.get(i));
 				
 				HttpURLConnection connection = (HttpURLConnection) link.openConnection();
+				HttpURLConnection.setFollowRedirects(true);
 				connection.setConnectTimeout(5000);
-				connection.setRequestMethod("HEAD");
+				connection.setRequestMethod("HEAD");				
 				connection.setRequestProperty("User-Agent","Mozilla/5.0 (Windows; U; Windows NT 6.0; en-US; rv:1.9.1.2) Gecko/20090729 Firefox/3.5.2 (.NET CLR 3.5.30729)");
 				connection.connect();
 				int code=connection.getResponseCode();
@@ -150,6 +175,20 @@ public class LinkChecker {
 					// add link and the code to the arraylist
 					outArray.add("<a href=\""+link+ "\"</a>"+link+"  \t |\t "+code +"\n </br>");
 				}
+				
+				if (linkArray.get(i).contains("#"))
+				{
+					boolean containsHash=containsHashReference(linkArray.get(i));
+					if (!containsHash)
+					{
+						outArray.add("<a href=\""+link+ "\"</a>"+link+"  \t |\t Internal #Ref Not Found \n </br>");
+					}
+					System.out.println(linkArray.get(i));
+					
+					
+				}
+				
+				
 			 } 
 			 catch (UnknownHostException e)
 			 {
@@ -170,6 +209,26 @@ public class LinkChecker {
 				e.printStackTrace();
 			}
 		 }
+	 }
+	 
+	 
+	 private boolean containsHashReference(String linkString) throws IOException
+	 {
+		 URL link = new URL(linkString);
+		
+		 int hashIndex=linkString.lastIndexOf("#");
+		 String hashName=linkString.substring(hashIndex+1);
+		 BufferedReader page=new BufferedReader(new InputStreamReader(link.openStream()));
+		 String hashPageStr;
+		 while((hashPageStr=page.readLine())!=null) 
+		 {
+			 if (hashPageStr.contains("name="+hashName) | hashPageStr.contains("id="+hashName))
+			 {
+				return true; 
+			 }
+		 }
+			page.close();
+		 return false;
 	 }
 	 
 	 
